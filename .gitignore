@@ -1,0 +1,29 @@
+# Lab loot / captures - never commit real hashes, tickets, or BloodHound data from any environment
+loot/
+*.zip
+*.kirbi
+*.ccache
+*.hash
+*.ntlm
+hashes/
+bloodhound-data/
+neo4j-data/
+
+# VM / hypervisor artifacts
+*.vmdk
+*.vdi
+*.vhdx
+*.vmsn
+*.vmem
+.vagrant/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+*.swp
+
+# Secrets
+.env
+*.pem
+*.key

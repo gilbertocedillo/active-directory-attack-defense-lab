@@ -1,0 +1,51 @@
+# Vagrantfile — OPTIONAL / best-effort.
+#
+# Reality check: there are no official, reliably-maintained Vagrant boxes for
+# Windows Server / Windows 11 (licensing). Most people build the Windows VMs
+# manually from evaluation ISOs — follow manual-setup.md as the primary path.
+# This file is provided so the Kali side (and the network shape) is codified,
+# and as a starting point if you maintain your OWN pre-built Windows boxes
+# (e.g. built with Packer). Replace the box names below with your own.
+#
+# Network: host-only 192.168.56.0/24 for ALL machines. No NAT in attack phase.
+
+Vagrant.configure("2") do |config|
+  config.vm.provider "virtualbox" do |vb|
+    vb.gui = true
+    vb.linked_clone = true
+  end
+
+  # --- DC01: Windows Server 2022 (YOUR OWN BOX — see note above) ---
+  config.vm.define "dc01" do |dc|
+    dc.vm.box = "your-own/windows-server-2022" # placeholder: packer-built box
+    dc.vm.hostname = "DC01"
+    dc.vm.network "private_network", ip: "192.168.56.10"
+    dc.vm.provider "virtualbox" do |vb|
+      vb.memory = 4096
+      vb.cpus = 2
+    end
+    # After boot, follow manual-setup.md steps 1-3 (AD DS promote, users, auditing).
+  end
+
+  # --- WS01: Windows 11 (YOUR OWN BOX) ---
+  config.vm.define "ws01" do |ws|
+    ws.vm.box = "your-own/windows-11" # placeholder: packer-built box
+    ws.vm.hostname = "WS01"
+    ws.vm.network "private_network", ip: "192.168.56.20"
+    ws.vm.provider "virtualbox" do |vb|
+      vb.memory = 4096
+      vb.cpus = 2
+    end
+  end
+
+  # --- KALI: official box exists and works ---
+  config.vm.define "kali" do |k|
+    k.vm.box = "kalilinux/rolling"
+    k.vm.hostname = "kali"
+    k.vm.network "private_network", ip: "192.168.56.30"
+    k.vm.provider "virtualbox" do |vb|
+      vb.memory = 2048
+      vb.cpus = 2
+    end
+  end
+end
